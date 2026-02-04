@@ -1,0 +1,204 @@
+{% extends 'users/base.html' %}
+{% block title %}Stress Assessment Records{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== Background ===== */
+.data-gradient-bg {
+    background: linear-gradient(135deg, #eef6ff, #fdfefe);
+    min-height: 100vh;
+}
+
+/* ===== Card ===== */
+.glass-container {
+    background: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 20px 45px rgba(59, 130, 246, 0.18);
+    padding: 30px;
+}
+
+/* ===== Title ===== */
+.neon-title {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+/* ===== Button ===== */
+.glow-btn {
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+    transition: 0.3s ease;
+}
+
+.glow-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(37, 99, 235, 0.45);
+}
+
+/* ===== Table ===== */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* ===== Table Header ===== */
+.table-header th {
+    background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 14px;
+}
+
+/* ===== Table Body ===== */
+.table-row td {
+    text-align: center;
+    padding: 14px;
+    font-size: 0.85rem;
+    color: #1f2937;
+}
+
+.table-row:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.table-row:hover {
+    background-color: #eef6ff;
+    transform: scale(1.01);
+    transition: 0.3s ease;
+}
+
+/* ===== Stress Badges ===== */
+.badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-low {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-moderate {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-high {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.badge-very-high {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===== Pagination Text ===== */
+.pagination-text {
+    color: #475569;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .glass-container {
+        padding: 20px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="data-gradient-bg py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="glass-container" data-aos="fade-up">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <a href="{% url 'users-home' %}" class="glow-btn px-6 py-3 rounded-lg font-bold">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                </a>
+
+                <div class="text-center">
+                    <h2 class="neon-title text-3xl sm:text-4xl">
+                        <i class="fas fa-database mr-3"></i> Stress Assessment Records
+                    </h2>
+                    <p class="text-slate-600 mt-2">
+                        Physiological & mental stress monitoring database
+                    </p>
+                </div>
+
+                <div class="w-24"></div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr class="table-header">
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Heart Rate</th>
+                            <th>HRV</th>
+                            <th>Resp. Rate</th>
+                            <th>Mental Fatigue</th>
+                            <th>Reaction Delay</th>
+                            <th>Adrenaline</th>
+                            <th>Cortisol</th>
+                            <th>Stress Level</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in data %}
+                        <tr class="table-row">
+                            <td>{{ item.Gender }}</td>
+                            <td>{{ item.Age }}</td>
+                            <td>{{ item.Heart_rate_BPM }}</td>
+                            <td>{{ item.Heart_rate_variability }}</td>
+                            <td>{{ item.Respiratory_rate }}</td>
+                            <td>{{ item.Mental_Fatigue_level }}</td>
+                            <td>{{ item.Reaction_time_delay }}</td>
+                            <td>{{ item.Adrenaline }}</td>
+                            <td>{{ item.Cortisol_level }}</td>
+
+                            <td>
+                                <span class="badge
+                                    {% if item.Stress_level == 'Very High' %}badge-very-high
+                                    {% elif item.Stress_level == 'High' %}badge-high
+                                    {% elif item.Stress_level == 'Moderate' %}badge-moderate
+                                    {% else %}badge-low{% endif %}">
+                                    {{ item.Stress_level }}
+                                </span>
+                            </td>
+
+                            <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <p class="pagination-text mt-6 text-center">
+                Showing {{ page_obj.start_index }} to {{ page_obj.end_index }}
+                of {{ page_obj.paginator.count }} results
+            </p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

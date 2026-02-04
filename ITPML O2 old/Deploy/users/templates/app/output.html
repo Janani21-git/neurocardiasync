@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCardio Stress Assessment Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00e5ff;
+            --primary-dark: #00bcd4;
+            --secondary: #ff4081;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --dark: #121f26;
+            --light: #f5f7fa;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a1929, #0f2027, #162b3a);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #000;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--primary), #00ffe7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .result-card {
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .low-risk .card-header {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.4));
+            color: #a5d6a7;
+        }
+
+        .high-risk .card-header {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(244, 67, 54, 0.4));
+            color: #ff8a80;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .result-summary {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .info-box:hover {
+            background: rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .info-box h5 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box ul {
+            list-style-type: none;
+        }
+
+        .info-box li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-box li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        .warning-signs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .warning-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 3px solid var(--danger);
+        }
+
+        .health-tips {
+            margin-top: 3rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .tip-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resources {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .resource-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .resource-link:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section-grid, .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a href="{% url 'users-home' %}" class="btn-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <h1>
+        <i class="fas fa-brain"></i> Stress Level Assessment Result
+    </h1>
+
+    <!-- LOW STRESS -->
+    {% if predict == 'Low' %}
+    <div class="result-card low-risk">
+        <div class="card-header">
+            <i class="fas fa-smile-beam"></i> Stress Level: LOW
+        </div>
+        <div class="card-body">
+            <p>
+                Your assessment indicates a <strong>Low Stress Level</strong>.
+                You are managing mental and physiological stress effectively.
+            </p>
+
+            <h3 class="section-title">
+                <i class="fas fa-leaf"></i> Maintain Healthy Balance
+            </h3>
+            <ul>
+                <li>Continue regular physical activity</li>
+                <li>Maintain proper sleep (7–8 hours)</li>
+                <li>Practice mindfulness or meditation</li>
+                <li>Stay socially connected</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- MODERATE STRESS -->
+    {% elif predict == 'Moderate' %}
+    <div class="result-card moderate-risk">
+        <div class="card-header">
+            <i class="fas fa-meh"></i> Stress Level: MODERATE
+        </div>
+        <div class="card-body">
+            <p>
+                Your stress level is <strong>Moderate</strong>.
+                Some physiological and mental indicators show early stress signs.
+            </p>
+
+            <h3 class="section-title">
+                <i class="fas fa-spa"></i> Stress Control Tips
+            </h3>
+            <ul>
+                <li>Reduce screen time</li>
+                <li>Practice deep breathing</li>
+                <li>Schedule short breaks during work</li>
+                <li>Improve hydration and nutrition</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- HIGH STRESS -->
+    {% elif predict == 'High' %}
+    <div class="result-card high-risk">
+        <div class="card-header">
+            <i class="fas fa-exclamation-circle"></i> Stress Level: HIGH
+        </div>
+        <div class="card-body">
+            <p>
+                Your results indicate a <strong>High Stress Level</strong>.
+                Immediate stress management is recommended.
+            </p>
+
+            <h3 class="section-title">
+                <i class="fas fa-heartbeat"></i> Recommended Actions
+            </h3>
+            <ul>
+                <li>Limit workload and overtime</li>
+                <li>Seek relaxation techniques (yoga, music)</li>
+                <li>Improve sleep quality</li>
+                <li>Consider professional counseling</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- VERY HIGH STRESS -->
+    {% elif predict == 'Very High' %}
+    <div class="result-card very-high-risk">
+        <div class="card-header">
+            <i class="fas fa-skull-crossbones"></i> Stress Level: VERY HIGH
+        </div>
+        <div class="card-body">
+            <p>
+                Your stress indicators are <strong>Very High</strong>.
+                This level may seriously impact physical and mental health.
+            </p>
+
+            <h3 class="section-title">
+                <i class="fas fa-ambulance"></i> Immediate Attention Required
+            </h3>
+            <ul>
+                <li>Consult a mental health professional</li>
+                <li>Reduce stressors immediately</li>
+                <li>Avoid caffeine and alcohol</li>
+                <li>Seek emotional and social support</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- COMMON HEALTH TIPS -->
+    <div class="health-tips">
+        <h2 class="section-title">
+            <i class="fas fa-lightbulb"></i> Stress Management Tips
+        </h2>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h3><i class="fas fa-bed"></i> Sleep Hygiene</h3>
+                <ul>
+                    <li>Consistent sleep schedule</li>
+                    <li>Reduce blue light exposure</li>
+                    <li>Quiet & dark environment</li>
+                </ul>
+            </div>
+
+            <div class="tip-card">
+                <h3><i class="fas fa-walking"></i> Physical Activity</h3>
+                <ul>
+                    <li>30 min walking daily</li>
+                    <li>Stretching exercises</li>
+                    <li>Breathing workouts</li>
+                </ul>
+            </div>
+
+            <div class="tip-card">
+                <h3><i class="fas fa-apple-alt"></i> Nutrition</h3>
+                <ul>
+                    <li>Balanced meals</li>
+                    <li>Limit sugar & caffeine</li>
+                    <li>Stay hydrated</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cards = document.querySelectorAll('.result-card, .tip-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('animate__animated', 'animate__fadeInUp');
+    });
+});
+</script>
+</body>
+
+
+</html>

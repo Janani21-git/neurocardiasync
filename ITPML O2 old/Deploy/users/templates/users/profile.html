@@ -1,0 +1,299 @@
+{% extends "users/base.html" %}
+{% block title %}Profile Page{% endblock title %}
+{% block content %}
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --accent-color: #4cc9f0;
+        --dark-color: #1a1a2e;
+        --light-color: #f8f9fa;
+        --success-color: #4bb543;
+        --danger-color: #ff3333;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+    }
+
+    .profile-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        max-width: 800px;
+        margin: 40px auto;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-container:hover {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+
+    .profile-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid white;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        z-index: 1;
+        position: relative;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-header {
+        position: relative;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .profile-header h3 {
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 5px;
+        font-size: 1.8rem;
+    }
+
+    .profile-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 8px;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        background-color: rgba(255, 255, 255, 0.8);
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        background-color: white;
+    }
+
+    .btn-custom {
+        border-radius: 12px;
+        padding: 12px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-save {
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 20px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-reset {
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        color: white;
+    }
+
+    .btn-reset:hover {
+        background: linear-gradient(45deg, #ff4b2b, #ff416c);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 20px rgba(255, 75, 43, 0.3);
+    }
+
+    .change-password-link {
+        display: inline-block;
+        color: var(--primary-color);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .change-password-link:hover {
+        color: var(--secondary-color);
+        transform: translateX(5px);
+    }
+
+    .change-password-link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background-color: var(--primary-color);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+    }
+
+    .change-password-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    .alert {
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+
+    .avatar-preview {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .avatar-preview img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-right: 15px;
+        object-fit: cover;
+        border: 2px solid #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 30px 20px;
+            margin: 20px 15px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img class="profile-avatar" src="{{ user.profile.avatar.url }}" alt="Avatar"/>
+        <h3>{{ user.username|title }}'s Profile</h3>
+        <p>Manage your account details</p>
+    </div>
+
+    {% if user_form.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div id="form_errors">
+                {% for key, value in user_form.errors.items %}
+                    <strong>{{ value }}</strong>
+                {% endfor %}
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    {{ user_form.username }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ user_form.email }}
+                </div>
+                
+                <div class="form-group">
+                    <a href="{% url 'password_change' %}" class="change-password-link">
+                        <i class="fas fa-key mr-2"></i>Change Password
+                    </a>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_avatar">Profile Picture</label>
+                    <div class="avatar-preview">
+                        <img id="avatar-preview" src="{{ user.profile.avatar.url }}" alt="Current Avatar">
+                        {{ profile_form.avatar }}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_bio">About Me</label>
+                    {{ profile_form.bio }}
+                    <small class="form-text text-muted">Tell us something about yourself</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-save btn-custom mr-3">
+                <i class="fas fa-save mr-2"></i>Save Changes
+            </button>
+            <button type="reset" class="btn btn-reset btn-custom">
+                <i class="fas fa-undo mr-2"></i>Reset
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Preview avatar before upload
+    document.getElementById('id_avatar').onchange = function(event) {
+        var reader = new FileReader();
+        reader.onload = function(){
+            var output = document.getElementById('avatar-preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>
+
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+{% endblock content %}
